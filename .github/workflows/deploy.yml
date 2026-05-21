@@ -1,0 +1,70 @@
+# GitHub Actions Workflow: Build & Deploy to GitHub Pages
+# Location: .github/workflows/deploy.yml in your repo
+#
+# On every push to the `main` branch, this:
+#   1. Checks out the code
+#   2. Installs Node.js + dependencies
+#   3. Runs `npm run build`
+#   4. Uploads the dist/ folder as a Pages artifact
+#   5. Publishes it to GitHub Pages
+#
+# Result: ~2 minutes after `git push`, the new version is live.
+
+name: Deploy to GitHub Pages
+
+# When this workflow runs
+on:
+  push:
+    branches: [main]      # Auto on every push to main
+  workflow_dispatch:      # Allows manual trigger from Actions tab
+
+# Permissions needed for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only run one deploy at a time (newer pushes cancel queued ones)
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # === BUILD JOB ===
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  # === DEPLOY JOB ===
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
