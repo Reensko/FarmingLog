@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <title>⚔ CoC Farming Tracker</title>
+    <meta name="description" content="Tracke deine Farming-Sessions, Loot, Mauern und Ziele in Clash of Clans" />
+
+    <!-- PWA: manifest + theme -->
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#FFD700" />
+
+    <!-- iOS PWA support (these are required separately because iOS doesn't fully use manifest.json) -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CoC Tracker" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+
+    <!-- Reset / base styles to prevent flicker before React mounts -->
+    <style>
+      * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background: #0a0514;
+        color: #fff;
+        overscroll-behavior: none;
+        -webkit-font-smoothing: antialiased;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      #root { min-height: 100vh; }
+      /* Pre-React loading state */
+      #initial-loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: serif;
+        font-size: 14px;
+        letter-spacing: 4px;
+        color: #FFD700;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="initial-loader">⚔ LÄDT...</div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
